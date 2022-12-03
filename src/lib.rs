@@ -20,9 +20,17 @@ pub struct Cli {
         help = "Path to top level folder that team folders are in"
     )]
     folder: String,
+
+    #[arg(
+        short = 'h',
+        default_value = "LASSAT Bi-Weekly Report",
+        help = "Heading for report"
+    )]
+    heading: String,
 }
 
 struct InputFiles {
+    // TODO Ignore files that start with .
     teams: Vec<TeamFiles>,
 }
 
@@ -33,6 +41,8 @@ struct TeamFiles {
 struct InputFile {
     date: NaiveDate,
     member_name: String,
+    is_team_lead: bool,
+    summary: String,
     cancelled: Vec<Task>,
     planned: Vec<Task>,
     in_progress: Vec<Task>,

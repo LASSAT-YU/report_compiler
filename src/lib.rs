@@ -8,10 +8,10 @@ pub fn run(args: Cli) -> String {
 #[derive(Parser, Debug)]
 // #[command(author, version, about, long_about = None)]
 pub struct Cli {
-    #[arg(short = 's', help = "Earliest date to include")]
+    #[arg(help = "Earliest date to include")]
     start_date: NaiveDate,
 
-    #[arg(short = 'e', help = "Last date to include (used as date of report)")]
+    #[arg(help = "Last date to include (used as date of report)")]
     end_date: NaiveDate,
 
     #[arg(
@@ -22,11 +22,18 @@ pub struct Cli {
     folder: String,
 
     #[arg(
-        short = 'h',
+        short = 'n',
         default_value = "LASSAT Bi-Weekly Report",
         help = "Heading for report"
     )]
     heading: String,
+
+    #[arg(
+        short = 't',
+        default_value = "30",
+        help = "Max length to allow for task name"
+    )]
+    max_task_name: u8,
 }
 
 struct InputFiles {

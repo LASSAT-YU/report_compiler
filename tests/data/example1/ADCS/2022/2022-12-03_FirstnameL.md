@@ -1,6 +1,6 @@
 # Summary
 
-Summary body goes here. Can include markdown [Link Text Shown](https://github.com/LASSAT-YU).
+Summary body goes here. Can include Markdown [Link Text Shown](https://github.com/LASSAT-YU).
 
 # Cancelled Tasks
 

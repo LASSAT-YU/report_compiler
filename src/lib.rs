@@ -30,7 +30,7 @@ pub struct Cli {
 
     #[arg(
         short = 't',
-        default_value = "30",
+        default_value = "40",
         help = "Max length to allow for task name"
     )]
     max_task_name: u8,

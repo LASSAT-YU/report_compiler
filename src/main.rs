@@ -1,3 +1,8 @@
+use clap::Parser;
+use report_compiler::Cli;
+
 fn main() {
-    println!("Hello, world!");
+    let args = Cli::parse();
+
+    dbg!(args);
 }

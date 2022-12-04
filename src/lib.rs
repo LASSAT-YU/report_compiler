@@ -14,7 +14,9 @@ fn generate_output(input: &str, args: &Cli) -> Result<String, Box<dyn Error>> {
 }
 
 fn load_input_files(args: &Cli) -> Result<String, Box<dyn Error>> {
-    fs::read_dir("./change_this_path").unwrap();
+    for file in fs::read_dir(&args.folder)? {
+        println!("{}", file?.path().display());
+    }
     todo!()
 }
 

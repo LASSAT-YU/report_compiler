@@ -275,6 +275,7 @@ impl InputFile {
                 }
 
                 let name = match new_task_value.get(1) {
+                    // TODO Add test for name not found
                     None => return Err(anyhow!("Name not fond for task in '{line}', on line {i}")),
                     Some(value) => value.as_str().to_string(),
                 };

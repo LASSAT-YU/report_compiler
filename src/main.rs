@@ -1,14 +1,13 @@
+use std::error::Error;
+
 use clap::Parser;
-use report_compiler::Cli;
 
-fn main() {
+use report_compiler::{run, save_output, Cli};
+
+fn main() -> Result<(), Box<dyn Error>> {
     let args = Cli::parse();
-
-    dbg!(args);
-
-    // TODO Load input files into memory
-
-    // TODO Generate output from input files
-
-    // TODO Save output to disk and report where file was saved
+    let output = run(&args)?;
+    let filename = save_output(&output, &args)?;
+    println!("Saved output to {filename}");
+    Ok(())
 }

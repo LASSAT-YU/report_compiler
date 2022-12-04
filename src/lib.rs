@@ -1,7 +1,20 @@
 use chrono::NaiveDate;
 use clap::Parser;
+use std::error::Error;
+use std::fs;
 
-pub fn run(args: Cli) -> String {
+pub fn run(args: &Cli) -> Result<String, Box<dyn Error>> {
+    todo!();
+    // TODO Load input files into memory
+
+    // TODO Generate output from input files
+
+    // TODO Save output to disk and report where file was saved
+    fs::read_dir("./change_this_path").unwrap();
+    Ok("".to_string())
+}
+
+pub fn save_output(output: &str, args: &Cli) -> Result<String, Box<dyn Error>> {
     todo!()
 }
 

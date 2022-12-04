@@ -1,7 +1,11 @@
+use std::fs;
+use std::path::PathBuf;
+
 use chrono::NaiveDate;
+
+use report_compiler::input_reports::InputFile;
 use report_compiler::runner::run;
 use report_compiler::settings::Cli;
-use std::fs;
 
 fn make_settings(start: &str, end: &str, folder: &str) -> Cli {
     let start = NaiveDate::parse_from_str(start, "%F").unwrap();
@@ -13,6 +17,27 @@ fn make_settings(start: &str, end: &str, folder: &str) -> Cli {
         heading: "LASSAT Bi-Weekly Report".to_string(),
         max_task_name: 40,
     }
+}
+
+#[test]
+fn empty_template_report() {
+    let expected = InputFile {
+        date: NaiveDate::from_ymd_opt(2022, 12, 31).unwrap(),
+        member_name: "FirstnameL".to_string(),
+        is_team_lead: false,
+        summary: Some("".to_string()),
+        cancelled: vec![],
+        planned: vec![],
+        in_progress: vec![],
+        complete: vec![],
+    };
+
+    let actual = InputFile::load_from_disk(
+        &PathBuf::from("tests/data/2022-12-31_FirstnameL.md"),
+        &Default::default(),
+    )
+    .expect("Unable to load template");
+    assert_eq!(actual, expected);
 }
 
 fn helper(args: Cli, target: &str) {

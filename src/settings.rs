@@ -1,7 +1,7 @@
 use chrono::NaiveDate;
 use clap::Parser;
 
-#[derive(Parser, Debug)]
+#[derive(Parser, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 #[command(author, version, about, long_about = None)]
 pub struct Cli {
     #[arg(help = "Earliest date to include")]

@@ -71,9 +71,7 @@ impl TeamFiles {
             match folder_year {
                 Ok(year) => {
                     if year_lower <= year && year <= year_upper {
-                        result
-                            .files
-                            .push(InputFile::load_from_disk(dir_year, args)?);
+                        result.add_files_from_year_dir(dir_year, args)?;
                     }
                 }
                 Err(e) => {
@@ -89,6 +87,60 @@ impl TeamFiles {
         }
         Ok(result)
     }
+    fn add_files_from_year_dir(&mut self, dir_year: PathBuf, args: &Cli) -> anyhow::Result<()> {
+        let year_lower = args.start_date.year();
+        let year_upper = args.end_date.year();
+
+        for file_entry in fs::read_dir(&dir_year)
+            .with_context(|| format!("Failed to read dir: {}", &dir_year.display()))?
+        {
+            // Iterating Individual files and determining if they are included or not
+            let file = file_entry?.path();
+            if file.is_dir() {
+                // TODO Add test to make sure this works
+                eprintln!(
+                    "Skipping '{}' because not expecting directories at 3rd level only files",
+                    dir_year.display()
+                );
+                continue;
+            }
+            let file_name = file.file_name_to_string_lossy();
+            if file_name.len() < 4 {
+                eprintln!("Skipping '{file_name}' because the filename is too short");
+                continue;
+            }
+            // Year is expected to be first 4 characters
+            let year_part_of_filename = &file_name[0..4];
+            match year_part_of_filename.parse::<i32>() {
+                Ok(year) => {
+                    if year_lower <= year && year <= year_upper {
+                        let input_file = InputFile::load_from_disk(&file, args);
+                        match input_file {
+                            Ok(value) => {
+                                self.files.push(value);
+                            }
+                            Err(e) => {
+                                eprintln!(
+                                    "Failed to process {}, due to the following error {:?}",
+                                    &file.display(),
+                                    e
+                                )
+                            }
+                        }
+                    }
+                }
+                Err(e) => {
+                    eprintln!(
+                        "Skipping '{}' because unable to parse '{}' into an integer with error: {}",
+                        file.display(),
+                        &year_part_of_filename,
+                        e
+                    )
+                }
+            }
+        }
+        Ok(())
+    }
 }
 
 pub struct InputFile {
@@ -103,7 +155,7 @@ pub struct InputFile {
 }
 
 impl InputFile {
-    fn load_from_disk(dir_year: PathBuf, args: &Cli) -> anyhow::Result<Self> {
+    fn load_from_disk(file: &PathBuf, args: &Cli) -> anyhow::Result<Self> {
         todo!()
     }
 }

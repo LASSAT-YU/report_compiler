@@ -3,7 +3,7 @@ use std::path::PathBuf;
 
 use anyhow::{anyhow, Context};
 use chrono::{Datelike, NaiveDate};
-use regex::{Match, Regex};
+use regex::Regex;
 
 use crate::settings::Cli;
 use crate::utils::FileNameExtract;

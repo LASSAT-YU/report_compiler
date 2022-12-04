@@ -1,5 +1,8 @@
 use crate::input_reports::{load_input_files, InputFiles};
 use crate::settings::Cli;
+use std::fs;
+use std::fs::File;
+use std::io::Write;
 
 pub fn run(args: &Cli) -> anyhow::Result<String> {
     let input = load_input_files(args)?;
@@ -11,5 +14,7 @@ fn generate_output(input: &InputFiles, args: &Cli) -> anyhow::Result<String> {
     todo!()
 }
 pub fn save_output(output: &str, args: &Cli) -> anyhow::Result<String> {
-    todo!()
+    let file_name = args.output.clone();
+    fs::write(&file_name, output)?;
+    Ok(file_name)
 }

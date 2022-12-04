@@ -23,6 +23,13 @@ pub struct Cli {
         help = "Heading for report"
     )]
     pub heading: String,
+
+    #[arg(
+        short = 'o',
+        default_value = "report.md",
+        help = "Filename to use for output"
+    )]
+    pub output: String,
     // TODO Add support for a max_task_name
     // #[arg(
     //     short = 't',

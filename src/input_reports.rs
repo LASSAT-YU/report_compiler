@@ -1,4 +1,5 @@
 use crate::settings::Cli;
+use crate::utils::FileNameExtract;
 use anyhow::Context;
 use chrono::NaiveDate;
 use std::fs;
@@ -16,17 +17,12 @@ impl InputFiles {
     fn load_from_disk(args: &Cli) -> anyhow::Result<Self> {
         let mut result = Self { teams: vec![] };
 
-        for file in fs::read_dir(&args.folder)
+        for entry in fs::read_dir(&args.folder)
             .with_context(|| format!("Failed to read dir: {}", &args.folder))?
         {
             // Iterating top level folder, expecting team folders only
-            let path = file?.path();
-            if path
-                .file_name()
-                .unwrap_or_else(|| panic!("Failed to get filename for {}", path.display()))
-                .to_string_lossy()
-                .starts_with('.')
-            {
+            let path = entry?.path();
+            if path.file_name_to_string_lossy().starts_with('.') {
                 println!("Skipping '{}' because it starts with a '.'", path.display());
                 continue;
             }

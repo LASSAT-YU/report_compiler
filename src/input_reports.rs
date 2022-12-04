@@ -88,8 +88,8 @@ impl TeamFiles {
         Ok(result)
     }
     fn add_files_from_year_dir(&mut self, dir_year: PathBuf, args: &Cli) -> anyhow::Result<()> {
-        let year_lower = args.start_date.year();
-        let year_upper = args.end_date.year();
+        let start_date = &args.start_date;
+        let end_date = &args.end_date;
 
         for file_entry in fs::read_dir(&dir_year)
             .with_context(|| format!("Failed to read dir: {}", &dir_year.display()))?
@@ -105,15 +105,15 @@ impl TeamFiles {
                 continue;
             }
             let file_name = file.file_name_to_string_lossy();
-            if file_name.len() < 4 {
-                eprintln!("Skipping '{file_name}' because the filename is too short");
+            // ASSUMPTION: Filename is prefixed with date in format YYYY-MM-DD
+            if file_name.len() < 10 {
+                eprintln!("Skipping '{file_name}' because filename is too short to have a valid date at the start");
                 continue;
             }
-            // Year is expected to be first 4 characters
-            let year_part_of_filename = &file_name[0..4];
-            match year_part_of_filename.parse::<i32>() {
-                Ok(year) => {
-                    if year_lower <= year && year <= year_upper {
+            let date_part_of_filename = &file_name[0..10];
+            match NaiveDate::parse_from_str(date_part_of_filename, "%F") {
+                Ok(date) => {
+                    if *start_date <= date && date <= *end_date {
                         let input_file = InputFile::load_from_disk(&file, args);
                         match input_file {
                             Ok(value) => {
@@ -131,9 +131,9 @@ impl TeamFiles {
                 }
                 Err(e) => {
                     eprintln!(
-                        "Skipping '{}' because unable to parse '{}' into an integer with error: {}",
+                        "Skipping '{}' because unable to parse '{}' into an date with error: {}",
                         file.display(),
-                        &year_part_of_filename,
+                        &date_part_of_filename,
                         e
                     )
                 }

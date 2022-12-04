@@ -15,7 +15,6 @@ fn make_settings(start: &str, end: &str, folder: &str) -> Cli {
         end_date: end,
         folder: format!("tests/data/{folder}"),
         heading: "LASSAT Bi-Weekly Report".to_string(),
-        max_task_name: 40,
     }
 }
 
@@ -25,7 +24,7 @@ fn empty_template_report() {
         date: NaiveDate::from_ymd_opt(2022, 12, 31).unwrap(),
         member_name: "FirstnameL".to_string(),
         is_team_lead: false,
-        summary: Some("".to_string()),
+        summary: "".to_string(),
         cancelled: vec![],
         planned: vec![],
         in_progress: vec![],

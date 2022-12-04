@@ -23,11 +23,11 @@ pub struct Cli {
         help = "Heading for report"
     )]
     pub heading: String,
-
-    #[arg(
-        short = 't',
-        default_value = "40",
-        help = "Max length to allow for task name"
-    )]
-    pub max_task_name: u8,
+    // TODO Add support for a max_task_name
+    // #[arg(
+    //     short = 't',
+    //     default_value = "40",
+    //     help = "Max length to allow for task name"
+    // )]
+    // pub max_task_name: u8,
 }

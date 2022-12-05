@@ -16,12 +16,16 @@ pub fn save_output(output: &str, args: &Cli) -> anyhow::Result<String> {
 }
 
 fn generate_output(input: &InputFiles, args: &Cli) -> anyhow::Result<String> {
-    // Code written with a preference on readability over speed (like adding eol in separate function, so each doesn't require a comment)
+    // Code written with a preference on readability over speed
+    // (like adding eol in separate function, so each doesn't require a comment)
+    // unwrap on writeln should never panic unless the system runs out of memory as
+    // errors come from inability to write to underlying store and in this case that is
+    // memory
     let mut result = format!("# {}\n", &args.heading);
     result.add_eol();
 
     // Add date of report (Uses last day included in the report)
-    result.push_str(&args.end_date.format("*%F*\n").to_string());
+    writeln!(result, "{}", args.end_date.format("*%F*")).unwrap();
     result.add_eol();
 
     // Table of Contents

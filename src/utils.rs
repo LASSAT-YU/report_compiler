@@ -22,6 +22,9 @@ pub trait StringUtils {
     /// Appends an end of line to a string (uses '\n')
     fn add_eol(&mut self);
 
+    /// Appends an end of line to a string if there is less than 2 at the end of the string
+    fn add_eol_max_2(&mut self);
+
     // Appends an indent (uses 4 spaces, to match PyCharm). `count` indents will be added
     fn add_indent(&mut self, count: usize);
 }
@@ -29,6 +32,12 @@ pub trait StringUtils {
 impl StringUtils for String {
     fn add_eol(&mut self) {
         self.push('\n');
+    }
+
+    fn add_eol_max_2(&mut self) {
+        if self.len() < 2 || &self[self.len() - 2..] != "\n\n" {
+            self.add_eol()
+        }
     }
 
     fn add_indent(&mut self, count: usize) {

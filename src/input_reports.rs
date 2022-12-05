@@ -79,7 +79,13 @@ impl TeamFiles {
         let member_list = self.files_by_member();
         let files = member_list.iter().flat_map(|member| member.iter());
         for file in files {
-            for t in &file.cancelled {
+            let sections = vec![
+                &file.cancelled,
+                &file.planned,
+                &file.in_progress,
+                &file.complete,
+            ];
+            for t in sections.iter().flat_map(|&x| x.iter()) {
                 // TODO Find a better way instead of copying tasks
                 result.push(t.clone());
             }

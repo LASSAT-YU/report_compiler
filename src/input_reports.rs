@@ -368,6 +368,17 @@ impl InputFile {
                 };
 
                 current_task = Some(Task { name, comment });
+            } else {
+                // No new task adding to existing task
+                if let Some(mut value) = current_task {
+                    value.comment += line;
+                    current_task = Some(value);
+                } else if !line.is_empty() {
+                    return Err(anyhow!(
+                        "Found data on line {i} that doesn't seem to belong to any task: '{}'",
+                        line
+                    ));
+                }
             }
         }
 

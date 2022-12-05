@@ -54,7 +54,7 @@ fn helper(args: Cli, target: &str) -> anyhow::Result<()> {
 #[test]
 fn example1_all() -> anyhow::Result<()> {
     helper(
-        make_settings("2000-01-01", "3000-01-01", "example1"),
+        make_settings("2000-01-01", "2022-12-03", "example1"),
         "test1.md",
     )
 }

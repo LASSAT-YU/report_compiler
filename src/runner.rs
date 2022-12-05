@@ -76,12 +76,20 @@ fn output_add_details(input: &AllInputFiles, s: &mut String) {
             }
             s.add_eol_max_2();
             writeln!(s, "#### 2. Tasks").unwrap();
-            s.add_indent(2);
-            writeln!(s, "1. Summary").unwrap();
+            s.add_eol();
+            writeln!(s, "##### 1. Summary").unwrap();
+            writeln!(s, "\nTODO\n").unwrap(); // TODO Implement table
             for (ind_task, task) in team.tasks().iter().enumerate() {
                 let ind_task = ind_task + 2; // First is Summary
-                s.add_indent(2);
-                writeln!(s, "{ind_task}. {}", task.display_name()).unwrap();
+                s.add_eol_max_2();
+                writeln!(
+                    s,
+                    "##### {ind_task}. {}\n\n{}",
+                    task.display_name(),
+                    task.comment
+                )
+                .unwrap();
+                s.add_eol_max_2();
             }
         }
     }

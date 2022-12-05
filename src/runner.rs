@@ -8,11 +8,13 @@ pub fn run(args: &Cli) -> anyhow::Result<String> {
     Ok(output)
 }
 
-fn generate_output(input: &InputFiles, args: &Cli) -> anyhow::Result<String> {
-    todo!()
-}
 pub fn save_output(output: &str, args: &Cli) -> anyhow::Result<String> {
     let file_name = args.output.clone();
     fs::write(&file_name, output)?;
     Ok(file_name)
+}
+
+fn generate_output(input: &InputFiles, args: &Cli) -> anyhow::Result<String> {
+    let result = format!("# {}", &args.heading);
+    Ok(result)
 }

@@ -33,25 +33,30 @@ fn empty_template_report() {
     };
 
     let actual = InputFile::load_from_disk(
-        &PathBuf::from("tests/data/2022-12-31_FirstnameL.md"),
+        &PathBuf::from(add_test_dir("Template/2022-12-31_FirstnameL.md")),
         &Default::default(),
     )
     .expect("Unable to load template");
     assert_eq!(actual, expected);
 }
 
-fn helper(args: Cli, target: &str) {
-    let actual = run(&args).unwrap();
-    let expected = fs::read_to_string(target).unwrap();
+fn add_test_dir(s: &str) -> String {
+    format!("tests/data/{s}")
+}
+
+fn helper(args: Cli, target: &str) -> anyhow::Result<()> {
+    let actual = run(&args)?;
+    let expected = fs::read_to_string(add_test_dir(target))?;
     assert_eq!(actual, expected);
+    Ok(())
 }
 
 #[test]
-fn example1_all() {
+fn example1_all() -> anyhow::Result<()> {
     helper(
         make_settings("2000-01-01", "3000-01-01", "example1"),
         "test1.md",
-    );
+    )
 }
 
 // TODO Add test to skip file in wrong place

@@ -1,3 +1,4 @@
+use std::borrow::Cow;
 use std::cmp::Ordering;
 use std::fs;
 use std::path::PathBuf;
@@ -76,10 +77,31 @@ impl TeamFiles {
     /// Returns one struct per member with all the files for that member. Makes use of invariant
     /// on TeamFiles that [`TeamFiles::files`] is sorted (This would mean that all files for the
     /// same member are sequential)
-    pub fn files_by_member(&self) -> Vec<&str> {
-        let mut display_names = vec![];
-        for file in self {}
-        display_names
+    pub fn files_by_member(&self) -> Vec<TeamMember> {
+        let mut result = vec![];
+        let mut iter = self.iter().enumerate();
+        let (mut start_index, mut curr_member_display_name) = match iter.next() {
+            None => return vec![],
+            Some((i, file)) => (i, file.member_display_name()),
+        };
+
+        // Main loop
+        for (i, file) in iter {
+            if file.member_display_name() != curr_member_display_name {
+                result.push(TeamMember {
+                    files: &self.files[start_index..i],
+                });
+                start_index = i;
+                curr_member_display_name = file.member_display_name();
+            }
+        }
+
+        // Add last set of files
+        // TODO Add test for team with only 1 member and no members
+        result.push(TeamMember {
+            files: &self.files[start_index..],
+        });
+        result
     }
 
     pub fn iter(&self) -> Iter<InputFile> {
@@ -210,29 +232,15 @@ pub struct InputFile {
     pub complete: Vec<Task>,
 }
 
-impl PartialOrd<Self> for InputFile {
-    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        Some(self.cmp(other))
-    }
-}
-
-impl Ord for InputFile {
-    fn cmp(&self, other: &Self) -> Ordering {
-        if self.is_team_lead != other.is_team_lead {
-            // other and self swapped places from normal comparison intentionally
-            return other.is_team_lead.cmp(&other.is_team_lead);
-        }
-        if self.date != other.date {
-            return self.date.cmp(&other.date);
-        }
-        if self.member_name != other.member_name {
-            return self.member_name.cmp(&other.member_name);
-        }
-        Ordering::Equal
-    }
-}
-
 impl InputFile {
+    pub fn member_display_name(&self) -> Cow<str> {
+        if self.is_team_lead {
+            Cow::from(format!("{} `Team Lead`", &self.member_name))
+        } else {
+            Cow::from(&self.member_name)
+        }
+    }
+
     pub fn load_from_disk(file: &PathBuf, _args: &Cli) -> anyhow::Result<Self> {
         let file_name = file.file_name_to_string_lossy();
 
@@ -386,6 +394,28 @@ impl InputFile {
     }
 }
 
+impl PartialOrd<Self> for InputFile {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl Ord for InputFile {
+    fn cmp(&self, other: &Self) -> Ordering {
+        if self.is_team_lead != other.is_team_lead {
+            // other and self swapped places from normal comparison intentionally
+            return other.is_team_lead.cmp(&other.is_team_lead);
+        }
+        if self.date != other.date {
+            return self.date.cmp(&other.date);
+        }
+        if self.member_name != other.member_name {
+            return self.member_name.cmp(&other.member_name);
+        }
+        Ordering::Equal
+    }
+}
+
 #[derive(Debug)]
 pub enum InputFileSections {
     Summary,
@@ -419,5 +449,30 @@ impl InputFileSections {
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct Task {
     pub name: String,
-    pub comment: String, // TODO trim spaces
+    pub comment: String,
+}
+
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
+/// Stores files for a member. All files must be for the same member and there must be
+/// at least 1 file
+pub struct TeamMember<'a> {
+    files: &'a [InputFile],
+}
+
+impl<'a> TeamMember<'a> {
+    /// Makes use of the invariants on [`TeamMember`] that the slice is not empty and all reports are for the same member
+    pub fn display_name(&self) -> Cow<str> {
+        self.files[0].member_display_name()
+    }
+
+    pub fn get_files(&self) -> &[InputFile] {
+        self.files
+    }
+
+    /// Create a new instance of [`Self`] and requires that `files` is not empty
+    pub fn new(files: &'a [InputFile]) -> Self {
+        // TODO Assert all equal in debug builds
+        assert!(!files.is_empty());
+        Self { files }
+    }
 }

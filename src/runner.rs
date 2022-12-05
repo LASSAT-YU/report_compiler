@@ -1,8 +1,9 @@
+use std::fmt::Write;
+use std::fs;
+
 use crate::input_reports::{load_input_files, AllInputFiles};
 use crate::settings::Cli;
 use crate::utils::StringUtils;
-use std::fmt::Write;
-use std::fs;
 
 pub fn run(args: &Cli) -> anyhow::Result<String> {
     let input = load_input_files(args)?;
@@ -38,8 +39,11 @@ fn generate_output(input: &AllInputFiles, args: &Cli) -> anyhow::Result<String> 
 
         result.add_indent(1);
         writeln!(result, "1. Summaries").unwrap();
-        for (ind_member, member_name) in team.files_by_member().iter().enumerate() {}
-
+        for (ind_member, team_member) in team.files_by_member().iter().enumerate() {
+            let ind_member = ind_member + 1;
+            result.add_indent(2);
+            writeln!(result, "{ind_member}. {}", team_member.display_name()).unwrap();
+        }
         result.add_indent(1);
         writeln!(result, "2. Tasks").unwrap();
     }

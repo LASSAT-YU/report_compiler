@@ -30,32 +30,36 @@ fn generate_output(input: &AllInputFiles, args: &Cli) -> anyhow::Result<String> 
     writeln!(result, "{}", args.end_date.format("*%F*")).unwrap();
     result.add_eol();
 
+    output_add_toc(input, &mut result);
+
+    Ok(result)
+}
+
+fn output_add_toc(input: &AllInputFiles, s: &mut String) {
     // Table of Contents
-    result.push_str("## Table of Contents\n");
-    result.add_eol();
+    s.push_str("## Table of Contents\n");
+    s.add_eol();
     for (ind_team, team) in input.iter().enumerate() {
         let ind_team = ind_team + 1;
-        writeln!(result, "{ind_team}. {}", team.name).unwrap();
+        writeln!(s, "{ind_team}. {}", team.name).unwrap();
 
         if !team.files.is_empty() {
-            result.add_indent(1);
-            writeln!(result, "1. Summaries").unwrap();
+            s.add_indent(1);
+            writeln!(s, "1. Summaries").unwrap();
             for (ind_member, team_member) in team.files_by_member().iter().enumerate() {
                 let ind_member = ind_member + 1;
-                result.add_indent(2);
-                writeln!(result, "{ind_member}. {}", team_member.display_name()).unwrap();
+                s.add_indent(2);
+                writeln!(s, "{ind_member}. {}", team_member.display_name()).unwrap();
             }
-            result.add_indent(1);
-            writeln!(result, "2. Tasks").unwrap();
-            result.add_indent(2);
-            writeln!(result, "1. Summary").unwrap();
+            s.add_indent(1);
+            writeln!(s, "2. Tasks").unwrap();
+            s.add_indent(2);
+            writeln!(s, "1. Summary").unwrap();
             for (ind_task, task) in team.tasks().iter().enumerate() {
                 let ind_task = ind_task + 2; // First is Summary
-                result.add_indent(2);
-                writeln!(result, "{ind_task}. {}", task.display_name()).unwrap();
+                s.add_indent(2);
+                writeln!(s, "{ind_task}. {}", task.display_name()).unwrap();
             }
         }
     }
-
-    Ok(result)
 }

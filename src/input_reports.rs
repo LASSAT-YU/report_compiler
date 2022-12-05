@@ -248,7 +248,7 @@ impl InputFile {
         let re_file_name = Regex::new(r"^(\d{4}-\d\d-\d\d)_([A-z][a-z]+[A-Z])_?(TL)?.md$")
             .expect("Failed to compile regex");
         let re_new_task =
-            Regex::new(r"^- +([\w '()\[\],]+?:)?(.*)$").expect("Failed to compile regex");
+            Regex::new(r"^- +(?:([\w '()\[\],]+?):)?\s*(.*)$").expect("Failed to compile regex");
 
         let caps = re_file_name.captures(&file_name);
         if caps.is_none() {

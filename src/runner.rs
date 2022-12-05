@@ -37,7 +37,7 @@ fn generate_output(input: &AllInputFiles, args: &Cli) -> anyhow::Result<String> 
 
 fn output_add_toc(input: &AllInputFiles, s: &mut String) {
     // Table of Contents
-    s.push_str("## Table of Contents\n");
+    writeln!(s, "## Table of Contents").unwrap();
     s.add_eol();
     for (ind_team, team) in input.iter().enumerate() {
         let ind_team = ind_team + 1;

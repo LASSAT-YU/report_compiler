@@ -21,10 +21,17 @@ impl FileNameExtract for PathBuf {
 pub trait StringUtils {
     /// Appends an end of line to a string (uses '\n')
     fn add_eol(&mut self);
+
+    // Appends an indent (uses 4 spaces, to match PyCharm). `count` indents will be added
+    fn add_indent(&mut self, count: usize);
 }
 
 impl StringUtils for String {
     fn add_eol(&mut self) {
         self.push('\n');
+    }
+
+    fn add_indent(&mut self, count: usize) {
+        self.push_str(&"    ".repeat(count));
     }
 }

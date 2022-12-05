@@ -32,6 +32,17 @@ fn generate_output(input: &AllInputFiles, args: &Cli) -> anyhow::Result<String> 
     // Table of Contents
     result.push_str("## Table of Contents\n");
     result.add_eol();
+    for (ind_team, team) in input.iter().enumerate() {
+        let ind_team = ind_team + 1;
+        writeln!(result, "{ind_team}. {}", team.name).unwrap();
+
+        result.add_indent(1);
+        writeln!(result, "1. Summaries").unwrap();
+        for (ind_member, member_name) in team.files_by_member().iter().enumerate() {}
+
+        result.add_indent(1);
+        writeln!(result, "2. Tasks").unwrap();
+    }
 
     Ok(result)
 }

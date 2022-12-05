@@ -69,12 +69,14 @@ pub struct TeamFiles {
 }
 
 impl TeamFiles {
+    pub fn iter(&self) -> Iter<InputFile> {
+        self.files.iter()
+    }
+
     pub fn sort(&mut self) {
         self.files.sort();
     }
-}
 
-impl TeamFiles {
     fn load_from_disk(dir_team: PathBuf, args: &Cli) -> anyhow::Result<Self> {
         let mut result = Self {
             name: dir_team.file_name_to_string_lossy().to_string(),
@@ -170,6 +172,15 @@ impl TeamFiles {
             }
         }
         Ok(())
+    }
+}
+
+impl<'a> IntoIterator for &'a TeamFiles {
+    type Item = &'a InputFile;
+    type IntoIter = Iter<'a, InputFile>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.iter()
     }
 }
 

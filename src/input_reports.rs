@@ -48,7 +48,6 @@ impl AllInputFiles {
         Ok(result)
     }
     fn sort(&mut self) {
-        self.teams.iter_mut().for_each(|team| team.sort());
         self.teams.sort();
     }
 }
@@ -62,6 +61,11 @@ impl<'a> IntoIterator for &'a AllInputFiles {
     }
 }
 
+/// Groups all files for a given team.
+///
+/// # Invariant
+///
+/// 1. [`TeamFiles::files`] is sorted
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct TeamFiles {
     pub name: String,
@@ -69,6 +73,15 @@ pub struct TeamFiles {
 }
 
 impl TeamFiles {
+    /// Returns one struct per member with all the files for that member. Makes use of invariant
+    /// on TeamFiles that [`TeamFiles::files`] is sorted (This would mean that all files for the
+    /// same member are sequential)
+    pub fn files_by_member(&self) -> Vec<&str> {
+        let mut display_names = vec![];
+        for file in self {}
+        display_names
+    }
+
     pub fn iter(&self) -> Iter<InputFile> {
         self.files.iter()
     }
@@ -117,6 +130,7 @@ impl TeamFiles {
                 }
             }
         }
+        result.sort();
         Ok(result)
     }
     fn add_files_from_year_dir(&mut self, dir_year: PathBuf, args: &Cli) -> anyhow::Result<()> {

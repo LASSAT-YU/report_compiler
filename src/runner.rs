@@ -18,7 +18,7 @@ pub fn save_output(output: &str, args: &Cli) -> anyhow::Result<String> {
 }
 
 fn generate_output(input: &AllInputFiles, args: &Cli) -> anyhow::Result<String> {
-    // Code written with a preference on readability over speed
+    // Code written with a preference for readability over speed
     // (like adding eol in separate function, so each doesn't require a comment)
     // unwrap on writeln should never panic unless the system runs out of memory as
     // errors come from inability to write to underlying store and in this case that is
@@ -37,15 +37,17 @@ fn generate_output(input: &AllInputFiles, args: &Cli) -> anyhow::Result<String> 
         let ind_team = ind_team + 1;
         writeln!(result, "{ind_team}. {}", team.name).unwrap();
 
-        result.add_indent(1);
-        writeln!(result, "1. Summaries").unwrap();
-        for (ind_member, team_member) in team.files_by_member().iter().enumerate() {
-            let ind_member = ind_member + 1;
-            result.add_indent(2);
-            writeln!(result, "{ind_member}. {}", team_member.display_name()).unwrap();
+        if !team.files.is_empty() {
+            result.add_indent(1);
+            writeln!(result, "1. Summaries").unwrap();
+            for (ind_member, team_member) in team.files_by_member().iter().enumerate() {
+                let ind_member = ind_member + 1;
+                result.add_indent(2);
+                writeln!(result, "{ind_member}. {}", team_member.display_name()).unwrap();
+            }
+            result.add_indent(1);
+            writeln!(result, "2. Tasks").unwrap();
         }
-        result.add_indent(1);
-        writeln!(result, "2. Tasks").unwrap();
     }
 
     Ok(result)

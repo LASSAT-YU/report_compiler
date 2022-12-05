@@ -404,7 +404,7 @@ impl Ord for InputFile {
     fn cmp(&self, other: &Self) -> Ordering {
         if self.is_team_lead != other.is_team_lead {
             // other and self swapped places from normal comparison intentionally
-            return other.is_team_lead.cmp(&other.is_team_lead);
+            return other.is_team_lead.cmp(&self.is_team_lead);
         }
         if self.date != other.date {
             return self.date.cmp(&other.date);

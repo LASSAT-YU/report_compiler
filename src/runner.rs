@@ -31,8 +31,60 @@ fn generate_output(input: &AllInputFiles, args: &Cli) -> anyhow::Result<String> 
     result.add_eol();
 
     output_add_toc(input, &mut result);
+    result.add_eol();
+    output_add_details(input, &mut result);
 
     Ok(result)
+}
+
+fn output_add_details(input: &AllInputFiles, s: &mut String) {
+    // Report Details
+    writeln!(s, "## Team Reports").unwrap();
+    s.add_eol();
+    for (ind_team, team) in input.iter().enumerate() {
+        let ind_team = ind_team + 1;
+        writeln!(s, "### {ind_team}. {}", team.name).unwrap();
+
+        if !team.files.is_empty() {
+            s.add_eol();
+            writeln!(s, "#### 1. Summaries").unwrap();
+            for (ind_member, team_member) in team.files_by_member().iter().enumerate() {
+                let ind_member = ind_member + 1;
+
+                s.add_eol();
+                writeln!(s, "##### {ind_member}. {}", team_member.display_name()).unwrap();
+                s.add_eol();
+                {
+                    // Insert summaries
+                    let mut at_least_one_added = false;
+                    let summaries: Vec<&String> =
+                        team_member.iter().map(|file| &file.summary).collect();
+                    for summary in summaries {
+                        if !summary.is_empty() {
+                            if at_least_one_added {
+                                // Prefix with a <hr />
+                                s.add_eol_max_2();
+                                writeln!(s, "---").unwrap();
+                                s.add_eol();
+                            }
+                            write!(s, "{summary}").unwrap();
+                            s.add_eol_max_2();
+                            at_least_one_added = true;
+                        }
+                    }
+                }
+            }
+            s.add_eol_max_2();
+            writeln!(s, "#### 2. Tasks").unwrap();
+            s.add_indent(2);
+            writeln!(s, "1. Summary").unwrap();
+            for (ind_task, task) in team.tasks().iter().enumerate() {
+                let ind_task = ind_task + 2; // First is Summary
+                s.add_indent(2);
+                writeln!(s, "{ind_task}. {}", task.display_name()).unwrap();
+            }
+        }
+    }
 }
 
 fn output_add_toc(input: &AllInputFiles, s: &mut String) {

@@ -1,5 +1,6 @@
 use std::borrow::Cow;
 use std::cmp::Ordering;
+use std::fmt::Write;
 use std::fs;
 use std::path::PathBuf;
 use std::slice::Iter;
@@ -9,7 +10,7 @@ use chrono::{Datelike, NaiveDate};
 use regex::Regex;
 
 use crate::settings::Cli;
-use crate::utils::FileNameExtract;
+use crate::utils::{FileNameExtract, StringUtils};
 
 pub fn load_input_files(args: &Cli) -> anyhow::Result<AllInputFiles> {
     AllInputFiles::load_from_disk(args)
@@ -326,9 +327,14 @@ impl InputFile {
                 InputFileSections::Summary => {
                     match new_section_heading {
                         None => {
-                            result.summary.push_str(line);
+                            if line.is_empty() {
+                                result.summary.add_eol_max_2()
+                            } else {
+                                writeln!(result.summary, "{}", line.trim()).unwrap();
+                            }
                         }
                         Some(value) => {
+                            result.summary = result.summary.trim().to_owned();
                             state = state
                                 .next()
                                 .expect("Internal Error: Summary not expected to be last state");

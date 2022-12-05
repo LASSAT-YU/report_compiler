@@ -200,7 +200,8 @@ impl InputFile {
         // TODO Regex compile to change to lazy static
         let re_file_name = Regex::new(r"^(\d{4}-\d\d-\d\d)_([A-z][a-z]+[A-Z])_?(TL)?.md$")
             .expect("Failed to compile regex");
-        let re_new_task = Regex::new(r"^- +([\w ]+?:)?(.*)$").expect("Failed to compile regex");
+        let re_new_task =
+            Regex::new(r"^- +([\w '()\[\],]+?:)?(.*)$").expect("Failed to compile regex");
 
         let caps = re_file_name.captures(&file_name);
         if caps.is_none() {
@@ -324,7 +325,7 @@ impl InputFile {
         }
 
         // TODO Add tests for ALL assumptions (each with a name to match the type of assumption)
-        // ASSUMPTION: Last section is completed
+        // ASSUMPTION: Last section is 'completed'
         if let Some(value) = current_task {
             result.complete.push(value);
         }

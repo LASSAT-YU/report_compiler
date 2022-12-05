@@ -8,6 +8,6 @@ fn main() -> anyhow::Result<()> {
     let args = Cli::parse();
     let output = run(&args)?;
     let filename = save_output(&output, &args)?;
-    println!("Saved output to {filename}");
+    println!("Saved output to '{filename}'");
     Ok(())
 }

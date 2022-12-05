@@ -1,6 +1,7 @@
-use crate::input_reports::{load_input_files, InputFiles};
+use crate::input_reports::{load_input_files, AllInputFiles};
 use crate::settings::Cli;
 use crate::utils::StringUtils;
+use std::fmt::Write;
 use std::fs;
 
 pub fn run(args: &Cli) -> anyhow::Result<String> {
@@ -15,7 +16,7 @@ pub fn save_output(output: &str, args: &Cli) -> anyhow::Result<String> {
     Ok(file_name)
 }
 
-fn generate_output(input: &InputFiles, args: &Cli) -> anyhow::Result<String> {
+fn generate_output(input: &AllInputFiles, args: &Cli) -> anyhow::Result<String> {
     // Code written with a preference on readability over speed
     // (like adding eol in separate function, so each doesn't require a comment)
     // unwrap on writeln should never panic unless the system runs out of memory as

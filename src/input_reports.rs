@@ -10,15 +10,15 @@ use regex::Regex;
 use crate::settings::Cli;
 use crate::utils::FileNameExtract;
 
-pub fn load_input_files(args: &Cli) -> anyhow::Result<InputFiles> {
-    InputFiles::load_from_disk(args)
+pub fn load_input_files(args: &Cli) -> anyhow::Result<AllInputFiles> {
+    AllInputFiles::load_from_disk(args)
 }
 
-pub struct InputFiles {
+pub struct AllInputFiles {
     pub teams: Vec<TeamFiles>,
 }
 
-impl InputFiles {
+impl AllInputFiles {
     pub fn iter(&self) -> Iter<TeamFiles> {
         self.teams.iter()
     }
@@ -53,7 +53,7 @@ impl InputFiles {
     }
 }
 
-impl<'a> IntoIterator for &'a InputFiles {
+impl<'a> IntoIterator for &'a AllInputFiles {
     type Item = &'a TeamFiles;
     type IntoIter = Iter<'a, TeamFiles>;
 

@@ -1,4 +1,5 @@
 use clap::Parser;
+
 use report_compiler::runner::{run, save_output};
 use report_compiler::settings::Cli;
 

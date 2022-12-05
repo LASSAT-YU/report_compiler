@@ -15,6 +15,7 @@ fn make_settings(start: &str, end: &str, folder: &str) -> Cli {
         end_date: end,
         folder: format!("tests/data/{folder}"),
         heading: "LASSAT Bi-Weekly Report".to_string(),
+        output: "test.md".to_string(),
     }
 }
 

@@ -1,3 +1,4 @@
+use std::cmp::Ordering;
 use std::fs;
 use std::path::PathBuf;
 
@@ -21,7 +22,7 @@ impl InputFiles {
         let mut result = Self { teams: vec![] };
 
         for entry in fs::read_dir(&args.folder)
-            .with_context(|| format!("Failed to read dir: {}", &args.folder))?
+            .with_context(|| format!("Failed to read dir: '{}'", &args.folder))?
         {
             // Iterating top level folder, expecting team folders only
             let path = entry?.path();
@@ -38,13 +39,25 @@ impl InputFiles {
             }
             result.teams.push(TeamFiles::load_from_disk(path, args)?);
         }
+        result.sort();
         Ok(result)
+    }
+    fn sort(&mut self) {
+        self.teams.iter_mut().for_each(|team| team.sort());
+        self.teams.sort();
     }
 }
 
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct TeamFiles {
     pub name: String,
     pub files: Vec<InputFile>,
+}
+
+impl TeamFiles {
+    pub fn sort(&mut self) {
+        self.files.sort();
+    }
 }
 
 impl TeamFiles {
@@ -146,7 +159,7 @@ impl TeamFiles {
     }
 }
 
-#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
+#[derive(Clone, Eq, PartialEq, Hash, Debug, Default)]
 pub struct InputFile {
     pub date: NaiveDate,
     pub member_name: String,
@@ -156,6 +169,28 @@ pub struct InputFile {
     pub planned: Vec<Task>,
     pub in_progress: Vec<Task>,
     pub complete: Vec<Task>,
+}
+
+impl PartialOrd<Self> for InputFile {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl Ord for InputFile {
+    fn cmp(&self, other: &Self) -> Ordering {
+        if self.is_team_lead != other.is_team_lead {
+            // other and self swapped places from normal comparison intentionally
+            return other.is_team_lead.cmp(&other.is_team_lead);
+        }
+        if self.date != other.date {
+            return self.date.cmp(&other.date);
+        }
+        if self.member_name != other.member_name {
+            return self.member_name.cmp(&other.member_name);
+        }
+        Ordering::Equal
+    }
 }
 
 impl InputFile {
@@ -293,7 +328,6 @@ impl InputFile {
         if let Some(value) = current_task {
             result.complete.push(value);
         }
-        dbg!(&result);
         Ok(result)
     }
     fn get_section_heading(line: &str) -> Option<&str> {

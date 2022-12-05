@@ -1,8 +1,6 @@
 use crate::input_reports::{load_input_files, InputFiles};
 use crate::settings::Cli;
 use std::fs;
-use std::fs::File;
-use std::io::Write;
 
 pub fn run(args: &Cli) -> anyhow::Result<String> {
     let input = load_input_files(args)?;

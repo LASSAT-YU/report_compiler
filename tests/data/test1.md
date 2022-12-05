@@ -15,22 +15,22 @@
         4. Prepare for the meeting with customer C `InProgress`
         5. Prepare for the team's hiking activity `InProgress`
         6. Build the control circuit `Completed`
-        7. Task 1 `Cancelled`
-        8. Task 2 `Cancelled`
-        9. Task 32 `Cancelled`
-        10. Task 4 `Planned`
-        11. Task 5 `Planned`
-        12. Task 6 `InProgress`
-        13. Task 7 `Completed`
-        14. Task 8 `Completed`
-        15. The skating activity `Cancelled`
-        16. Design the emission flow chart `Planned`
-        17. Purchase material B `Planned`
-        18. Request a visit in Company D `InProgress`
-        19. Test the code in file B `Completed`
+        7. The skating activity `Cancelled`
+        8. Design the emission flow chart `Planned`
+        9. Purchase material B `Planned`
+        10. Request a visit in Company D `InProgress`
+        11. Test the code in file B `Completed`
+        12. Task 1 `Cancelled`
+        13. Task 2 `Cancelled`
+        14. Task 3 `Cancelled`
+        15. Task 4 `Planned`
+        16. Task 5 `Planned`
+        17. Task 6 `InProgress`
+        18. Task 7 `Completed`
+        19. Task 8 `Completed`
         20. Task 1 `Cancelled`
         21. Task 2 `Cancelled`
-        22. Task 32 `Cancelled`
+        22. Task 3 `Cancelled`
         23. Task 4 `Planned`
         24. Task 5 `Planned`
         25. Task 6 `InProgress`
@@ -252,7 +252,7 @@ Building a warp drive
 
 ##### 3. Canceled1 `Cancelled`
 
-Canceled1 abcd
+abcd:
 
 ##### 4. Planned 1 `Planned`
 

@@ -47,6 +47,13 @@ fn generate_output(input: &AllInputFiles, args: &Cli) -> anyhow::Result<String> 
             }
             result.add_indent(1);
             writeln!(result, "2. Tasks").unwrap();
+            result.add_indent(2);
+            writeln!(result, "1. Summary").unwrap();
+            for (ind_task, task) in team.tasks().iter().enumerate() {
+                let ind_task = ind_task + 2; // First is Summary
+                result.add_indent(2);
+                writeln!(result, "{ind_task}. {}", task.display_name()).unwrap();
+            }
         }
     }
 

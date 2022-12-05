@@ -74,6 +74,19 @@ pub struct TeamFiles {
 }
 
 impl TeamFiles {
+    pub fn tasks(&self) -> Vec<Task> {
+        let mut result = vec![];
+        let member_list = self.files_by_member();
+        let files = member_list.iter().flat_map(|member| member.iter());
+        for file in files {
+            for t in &file.cancelled {
+                // TODO Find a better way instead of copying tasks
+                result.push(t.clone());
+            }
+        }
+        result
+    }
+
     /// Returns one struct per member with all the files for that member. Makes use of invariant
     /// on TeamFiles that [`TeamFiles::files`] is sorted (This would mean that all files for the
     /// same member are sequential)
@@ -367,7 +380,11 @@ impl InputFile {
                     Some(value) => value.as_str().to_string(),
                 };
 
-                current_task = Some(Task { name, comment });
+                current_task = Some(Task {
+                    name,
+                    comment,
+                    section: state,
+                });
             } else {
                 // No new task adding to existing task
                 if let Some(mut value) = current_task {
@@ -427,8 +444,9 @@ impl Ord for InputFile {
     }
 }
 
-#[derive(Debug)]
+#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub enum InputFileSections {
+    #[default]
     Summary,
     Cancelled,
     Planned,
@@ -437,6 +455,22 @@ pub enum InputFileSections {
 }
 
 impl InputFileSections {
+    pub fn display_name(&self) -> &str {
+        match self {
+            InputFileSections::Cancelled => "Cancelled",
+            InputFileSections::Planned => "Planned",
+            InputFileSections::InProgress => "InProgress",
+            InputFileSections::Complete => "Completed",
+            _ => {
+                eprintln!(
+                    "Got an attempt to get a display name a unexpected section: {}",
+                    self.section_name()
+                );
+                "NOT APPLICABLE"
+            }
+        }
+    }
+
     pub fn next(&self) -> Option<Self> {
         match self {
             Self::Summary => Some(Self::Cancelled),
@@ -461,6 +495,13 @@ impl InputFileSections {
 pub struct Task {
     pub name: String,
     pub comment: String,
+    pub section: InputFileSections,
+}
+
+impl Task {
+    pub fn display_name(&self) -> String {
+        format!("{} `{}`", self.name, self.section.display_name())
+    }
 }
 
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
@@ -471,6 +512,10 @@ pub struct TeamMember<'a> {
 }
 
 impl<'a> TeamMember<'a> {
+    pub fn iter(&self) -> Iter<InputFile> {
+        self.files.iter()
+    }
+
     /// Makes use of the invariants on [`TeamMember`] that the slice is not empty and all reports are for the same member
     pub fn display_name(&self) -> Cow<str> {
         self.files[0].member_display_name()

@@ -1,6 +1,7 @@
 use std::cmp::Ordering;
 use std::fs;
 use std::path::PathBuf;
+use std::slice::Iter;
 
 use anyhow::{anyhow, Context};
 use chrono::{Datelike, NaiveDate};
@@ -18,6 +19,10 @@ pub struct InputFiles {
 }
 
 impl InputFiles {
+    pub fn iter(&self) -> Iter<TeamFiles> {
+        self.teams.iter()
+    }
+
     fn load_from_disk(args: &Cli) -> anyhow::Result<Self> {
         let mut result = Self { teams: vec![] };
 
@@ -45,6 +50,15 @@ impl InputFiles {
     fn sort(&mut self) {
         self.teams.iter_mut().for_each(|team| team.sort());
         self.teams.sort();
+    }
+}
+
+impl<'a> IntoIterator for &'a InputFiles {
+    type Item = &'a TeamFiles;
+    type IntoIter = Iter<'a, TeamFiles>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.iter()
     }
 }
 

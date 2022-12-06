@@ -399,14 +399,16 @@ impl InputFile {
                 });
             } else {
                 // No new task adding to existing task
-                if let Some(mut value) = current_task {
-                    value.comment += line;
-                    current_task = Some(value);
-                } else if !line.is_empty() {
-                    return Err(anyhow!(
-                        "Found data on line {i} that doesn't seem to belong to any task: '{}'",
-                        line
-                    ));
+                if !line.is_empty() {
+                    if let Some(mut value) = current_task {
+                        write!(value.comment, " {}", line.trim()).unwrap();
+                        current_task = Some(value);
+                    } else {
+                        return Err(anyhow!(
+                            "Found data on line {i} that doesn't seem to belong to any task: '{}'",
+                            line
+                        ));
+                    }
                 }
             }
         }

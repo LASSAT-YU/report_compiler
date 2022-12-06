@@ -111,58 +111,57 @@ Purchased snacks, still need to purchase the hiking shoes.
 
 The control circuit of the robotic arm was successfully built and tested.
 
-##### 7. Task 1 `Cancelled`
-
-With some text can be many lines
-
-##### 8. Task 2 `Cancelled`
-
-With some text can be many lines
-
-##### 9. Task 32 `Cancelled`
-
-With some text can be many lines
-
-##### 10. Task 4 `Planned`
-
-With some text can be many lines
-
-##### 11. Task 5 `Planned`
-
-With some text can be many lines
-
-##### 12. Task 6 `InProgress`
-
-With some text can be many lines
-
-##### 13. Task 7 `Completed`
-
-With some text can be many lines
-
-##### 14. Task 8 `Completed`
-
-With some text can be many lines
-
-##### 15. The skating activity `Cancelled`
+##### 7. The skating activity `Cancelled`
 
 A snow storm is forecasted.
 
-##### 16. Design the emission flow chart `Planned`
+##### 8. Design the emission flow chart `Planned`
 
 design the emission flow chart of the satellite
 
-##### 17. Purchase material B `Planned`
+##### 9. Purchase material B `Planned`
 
 Purchase material B for task 1
 
-##### 18. Request a visit in Company D `InProgress`
+##### 10. Request a visit in Company D `InProgress`
 
-Reached out with manager E of Company D, more details needs to be discussed in the
-following week.
+Reached out with manager E of Company D, more details needs to be discussed in the following week.
 
-##### 19. Test the code in file B `Completed`
+##### 11. Test the code in file B `Completed`
 
 Tested the code in file B and a result report is submitted.
+
+##### 12. Task 1 `Cancelled`
+
+With some text can be many lines
+
+##### 13. Task 2 `Cancelled`
+
+With some text can be many lines
+
+##### 14. Task 3 `Cancelled`
+
+With some text can be many lines
+
+##### 15. Task 4 `Planned`
+
+With some text can be many lines
+
+##### 16. Task 5 `Planned`
+
+With some text can be many lines
+
+##### 17. Task 6 `InProgress`
+
+With some text can be many lines
+
+##### 18. Task 7 `Completed`
+
+With some text can be many lines
+
+##### 19. Task 8 `Completed`
+
+With some text can be many lines
 
 ##### 20. Task 1 `Cancelled`
 
@@ -172,7 +171,7 @@ With some text can be many lines
 
 With some text can be many lines
 
-##### 22. Task 32 `Cancelled`
+##### 22. Task 3 `Cancelled`
 
 With some text can be many lines
 
@@ -256,24 +255,15 @@ abcd:
 
 ##### 4. Planned 1 `Planned`
 
-Planned 1
-
 ##### 5. Planned 2 `Planned`
-
-Planned 2
 
 ##### 6. In Progress 1 `InProgress`
 
-In progress 1
-
 ##### 7. In Progress 2 `InProgress`
 
-In progress 2
-
 ##### 8. In Progress 3 `InProgress`
-
-In progress 3
 
 ##### 9. Completed task `Completed`
 
 Here
+

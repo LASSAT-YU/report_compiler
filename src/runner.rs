@@ -82,15 +82,15 @@ fn output_add_details(input: &AllInputFiles, s: &mut String) {
             for (ind_task, task) in team.tasks().iter().enumerate() {
                 let ind_task = ind_task + 2; // First is Summary
                 s.add_eol_max_2();
-                writeln!(
-                    s,
-                    "##### {ind_task}. {}\n\n{}",
-                    task.display_name(),
-                    task.comment
-                )
-                .unwrap();
+                writeln!(s, "##### {ind_task}. {}", task.display_name()).unwrap();
+                if !task.comment.is_empty() {
+                    s.add_eol();
+                    writeln!(s, "{}", &task.comment).unwrap();
+                }
                 s.add_eol_max_2();
             }
+        } else {
+            s.add_eol_max_2();
         }
     }
 }
